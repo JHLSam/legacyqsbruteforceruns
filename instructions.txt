@@ -1,0 +1,187 @@
+instructions
+
+==========================================================
+1. run_service.sh
+==========================================================
+line 747: suggested_safe_top_up_default=500000000000000000 ❌ #remove 1 zero and change "5" to "1"
+	  suggested_safe_top_up_default=10000000000000000  ✅ 
+	  
+line 1327: sudo rm -rf "$build_dir" ❌ #remove sudo
+	   rm -rf "$build_dir" ✅ 
+	   
+line 1332: sudo rm -rf "$build_dir_k8s" ❌ #remove sudo
+	   rm -rf "$build_dir_k8s" ✅
+	   
+line 1338: sudo chown -R $(whoami) "$path_to_store" ❌ #comment out whole line
+	   # sudo chown -R $(whoami) "$path_to_store" ✅
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+
+==========================================================
+2. pub.py *[OPTIONAL] if you want daily updates of your services sent to you
+==========================================================
+put file in trader-quickstart, assume trader-quickstart is in Desktop
+
+1 time setup, usable across other machines. 
+Tasks: create telegram bot, get bot API TOKEN, CHAT INSTANCE ID
+
+2.1 >> ✅ Part 1: Get Your Telegram Bot API Token
+
+Open Telegram.
+
+Search for @BotFather (official bot with a blue checkmark).
+
+Start a chat and type:
+
+/start
+
+
+Create a new bot:
+
+/newbot
+
+
+Follow the prompts:
+
+Enter a name for your bot.
+
+Enter a unique username (must end in bot, e.g., my_test_bot).
+
+After creation, BotFather will give you a message like:
+
+Use this token to access the HTTP API:
+123456789:AAExampleTokenHere
+
+
+👉 That long string is your Bot API Token.
+⚠️ Keep it secret. Anyone with it can control your bot.
+
+2.2 >> ✅ Part 2: Get Your Chat ID
+
+There are different ways depending on what you need.
+
+🔹 Option A: Get Your Personal Chat ID (Quickest Way)
+
+Start a chat with your bot (search its username).
+
+Send any message (e.g., "hello").
+
+Open this URL in your browser (replace with your token):
+
+#SEE LINE 53 of this document and replace "YOUR_BOT_TOKEN" accordingly
+https://api.telegram.org/botYOUR_BOT_TOKEN/getUpdates 
+
+Example:
+
+https://api.telegram.org/bot123456789:AAExampleTokenHere/getUpdates
+
+
+You’ll see a JSON response like(example):
+
+{
+  "ok": true,
+  "result": [
+    {
+      "update_id": 123456789,
+      "message": {
+        "chat": {
+          "id": 987654321,
+          "first_name": "John",
+          "type": "private"
+        }
+      }
+    }
+  ]
+}
+
+
+👉 The number under "chat": { "id": ... } is your Chat ID.
+
+now, with a bot instance created and an API TOKEN and CHATID gotten, you input this into your pub.py script lines 9 and 10. If you do not want to hard code these values, then refer to the comment in that script to put it in env variables, which is stored just in RAM 
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+
+==========================================================
+3. retry_legacy2_updated_cleaned.sh
+==========================================================
+3.1 >> put file in trader-quickstart, assume trader-quickstart is in Desktop
+
+if not already inside trader-quickstart folder then:
+3.2 >> cd $HOME/Desktop/trader-quickstart
+
+Next: 
+3.3 >> chmod +x ./retry_legacy2_test.sh
+
+line 18: delay = 50
+this is by default but monitor your own see if it is able to reliably hit 61 mech transactions with 0.61 xdai with this delay, if needed, increase more but don't increase so much such that you give it time to place trades, unless that is what you want. I would do steps of 10 seconds. e.g 50 to 60, 70,..
+
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+
+==========================================================
+4. agentmonitor.py *[OPTIONAL] if you want automated topups. setup for just 1 machine
+==========================================================
+** only 1 machine runs this
+If desired, For those who have not set it up before. do: git clone https://github.com/JHLSam/agentsafemonitor.git
+and follow steps here: https://github.com/JHLSam/agentsafemonitor
+If stub wallet setup is very confusing for you to follow for some reason, then just use existing wallet for the key and make sure that wallet is funded with xdai. 
+RPC you just pick from 1 that you have. Interval I recommend check every 60 minutes but 30 is ok too, should not increase rpc calls too much.
+For this setup, values could be as follows:
+Threshold xDai Topup: 0.02
+Interval (minutes): 60 or 30
+Top-up amount xDai: 0.61
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+
+==========================================================
+5. topup.py *no longer needed
+==========================================================
+ok to ignore
+----------------------------------------------------------
+
+==========================================================
+6. *SETUP DAILY TASK SCHEDULER [Cron job]
+==========================================================
+6.1 crontab -e
+
+6.2 Then, choose whatever option for .nano text editor
+
+Then you should see the following:
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+# Edit this file to introduce tasks to be run by cron.
+# 
+# Each task to run has to be defined through a single line
+# indicating with different fields when the task will be run
+# and what command to run for the task
+# 
+# To define the time you can provide concrete values for
+# minute (m), hour (h), day of month (dom), month (mon),
+# and day of week (dow) or use '*' in these fields (for 'any').
+# 
+# Notice that tasks will be started based on the cron's system
+# daemon's notion of time and timezones.
+# 
+# Output of the crontab jobs (including errors) is sent through
+# email to the user the crontab file belongs to (unless redirected).
+# 
+# For example, you can run a backup of all your user accounts
+# at 5 a.m every week with:
+# 0 5 * * 1 tar -zcf /var/backups/home.tgz /home/
+# 
+# For more information see the manual pages of crontab(5) and cron(8)
+# 
+# m h  dom mon dow   command
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+6.3 >> add your crontab entry at the end of the file under "# m h  dom mon dow   command" to specify what time to run the retry_legacy.sh script
+you may want to change it from time to time depending on when your contract epoch resets, which you may refer to here: https://operate.olas.network/contracts
+
+e.g this will run every 8 hours starting from 3am:
+0 3,11,19 * * * /home/moin1/Desktop/trader-quickstart/retry_legacy2.sh >> /home/moin1/Desktop/trader-quickstart/cronjob.log 2>&1
+
+*make sure to leave an empty line after your crontab entry. 
+
+6.4 When your edit is done, just do a Ctrl+X, then hit "Y" when it asks to "save modified buffer" then after that it says File Name to write ... just hit "Enter"
+
+Done if you have followed correctly so far, your cron job should run successfully and hopefully the script works properly
+
