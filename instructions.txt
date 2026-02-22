@@ -177,7 +177,7 @@ Then you should see the following:
 you may want to change it from time to time depending on when your contract epoch resets, which you may refer to here: https://operate.olas.network/contracts
 
 e.g this will run every 10 hours starting from 0000 hours, replace "moin1" with your actual user:
-0 */10 * * * /home/moin1/Desktop/trader-quickstart/retry_legacy2_updated_cleaned.sh >> /home/moin1/Desktop/cronjob.log 2>&1
+0 */10 * * * /bin/bash /home/moin1/Desktop/trader-quickstart/retry_legacy2_updated_cleaned.sh >> /home/moin1/Desktop/cronjob.log 2>&1
 
 *make sure to leave an empty line after your crontab entry. 
 
