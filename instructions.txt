@@ -12,7 +12,7 @@ line 1327: sudo rm -rf "$build_dir" ❌ #remove sudo
 line 1332: sudo rm -rf "$build_dir_k8s" ❌ #remove sudo
 	   rm -rf "$build_dir_k8s" ✅
 	   
-line 1338: sudo chown -R $(whoami) "$path_to_store" ❌ #comment out whole line
+line 1358: sudo chown -R $(whoami) "$path_to_store" ❌ #comment out whole line
 	   # sudo chown -R $(whoami) "$path_to_store" ✅
 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
