@@ -110,7 +110,7 @@ if not already inside trader-quickstart folder then:
 3.2 >> cd $HOME/Desktop/trader-quickstart
 
 Next: 
-3.3 >> chmod +x ./retry_legacy2_test.sh
+3.3 >> chmod +x ./retry_legacy2_updated_cleaned.sh
 
 line 18: delay = 50
 this is by default but monitor your own see if it is able to reliably hit 61 mech transactions with 0.61 xdai with this delay, if needed, increase more but don't increase so much such that you give it time to place trades, unless that is what you want. I would do steps of 10 seconds. e.g 50 to 60, 70,..
